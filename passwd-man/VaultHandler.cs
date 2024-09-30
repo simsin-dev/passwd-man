@@ -14,6 +14,11 @@ public static class VaultHandler
     static bool vaultUpdated = false;
     static bool open = false;
 
+    public static bool IsOpen()
+    {
+        return open;
+    }
+
     public static void CreateVault(string path, string passwd)
     {
         if (open)
@@ -227,7 +232,7 @@ public static class VaultHandler
         public List<CredentialsSet> Credentials;
     }
 
-    struct CredentialsSet
+    public struct CredentialsSet
     {
         public string name;
 
