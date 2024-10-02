@@ -27,7 +27,13 @@
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="{Binding Name}" Margin="0,0,10,0"/>
                         <Button Content="Get Link" Margin="5,0" 
+                                Command="{Binding GetUsername}"/>
+                        <Button Content="Get Link" Margin="5,0" 
+                                Command="{Binding GetPassword}"/>
+                        <Button Content="Get Link" Margin="5,0" 
                                 Command="{Binding GetLink}"/>
+                        <Button Content="Get Link" Margin="5,0" 
+                                Command="{Binding EditItem}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

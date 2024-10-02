@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using DynamicData;
 using ReactiveUI;
 
 namespace passwd_man.ViewModels
@@ -12,44 +14,31 @@ namespace passwd_man.ViewModels
     {
         public ObservableCollection<Item> Credentials { get; } = new ObservableCollection<Item>();
 
-        // Commands for editing and deleting
-
-        public ICommand GetUsernameCommand { get; }
-        public ICommand GetPasswordCommand { get; }
-        public ICommand GetLinkCommand { get; }
-
-        public ICommand EditCommand { get; }
-        public ICommand DeleteCommand { get; }
-
         public MainWindowViewModel()
         {
-            Credentials.Add(new Item("meow", "GetUname"));
-            // Define commands
+            string[] names = VaultHandler.ListCreds();
+            Credentials.AddRange(names.Select(name => new Item { Name = name }).ToArray());
         }
 
         public class Item
         {
             public string Name { get; set; }
-
-            public Item(string name, string a1)
-            {
-                Name = name;
-            }
-
             public async void GetLink()
             {
                 var clip = Clipboard.Get();
-                await clip.SetTextAsync("moew");
+                await clip.SetTextAsync(VaultHandler.GetLink(Name));
             }
 
-            private void GetPassword()
+            private async void GetPassword()
             {
-                throw new NotImplementedException();
+                var clip = Clipboard.Get();
+                await clip.SetTextAsync(VaultHandler.GetPassword(Name));
             }
 
-            private void GetUsername()
+            private async void GetUsername()
             {
-                throw new NotImplementedException();
+                var clip = Clipboard.Get();
+                await clip.SetTextAsync(VaultHandler.GetUsername(Name));
             }
 
             public void EditItem()

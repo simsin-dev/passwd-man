@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
@@ -48,6 +49,13 @@ public static class Config
     {
         var str = JsonConvert.SerializeObject(config);
         File.WriteAllText(configLocation, str);
+    }
+
+
+
+    public static string[] ListVaultNames()
+    {
+        return config.vaults.Select(v => v.name).ToArray();
     }
 
     public static void AddVault(string name, string path)

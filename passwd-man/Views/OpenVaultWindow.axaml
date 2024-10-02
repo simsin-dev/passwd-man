@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:passwd_man.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="passwd_man.Views.OpenVaultWindow"
+        x:DataType="vm:OpenVaultViewModel"
+        Width="400"
+        Height="600"
+        MinWidth="400"
+        MinHeight="600"
+        MaxWidth="400"
+        MaxHeight="600"
+        Background="Black"
+        Title="Open Vault">
+
+        
+        <Design.DataContext>
+            <vm:OpenVaultViewModel/>
+        </Design.DataContext>
+
+        <StackPanel>
+            <ItemsControl x:Name="items" ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding Name}" Margin="0,0,10,0"/>
+                            <Button Content="OPEN"
+                                    Command="{Binding #items.((vm:OpenVaultViewModel)DataContext).}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+</Window>
