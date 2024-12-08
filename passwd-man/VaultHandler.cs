@@ -1,13 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Avalonia.Data.Converters;
 
 namespace passwd_man;
 
 public static class VaultHandler
 {
+    public static string? CredentialsSetToEdit; //There is probably a better way to do this. I don not care
+
     static Vault vault;
     static string location = "";
     static string password = "";
@@ -32,14 +38,16 @@ public static class VaultHandler
         location = path;
         password = passwd;
 
+        open = true;
+
         Save();
     }
-    
+
     public static string GetPassword(string name)
     {
         var i = GetIndexOf(name);
-        if(i == -1)
-        {return "";}
+        if (i == -1)
+        { return ""; }
 
         return vault.Credentials[i].password;
     }
@@ -47,8 +55,8 @@ public static class VaultHandler
     public static string? GetLink(string name)
     {
         var i = GetIndexOf(name);
-        if(i == -1)
-        {return null;}
+        if (i == -1)
+        { return null; }
 
         return vault.Credentials[i].link;
     }
@@ -56,8 +64,8 @@ public static class VaultHandler
     public static string? GetUsername(string name)
     {
         var i = GetIndexOf(name);
-        if(i == -1)
-        {return null;}
+        if (i == -1)
+        { return null; }
 
         return vault.Credentials[i].username;
     }
@@ -66,25 +74,20 @@ public static class VaultHandler
     {
         for (int i = 0; i < vault.Credentials.Count; i++)
         {
-            if(vault.Credentials[i].name == name)
+            if (vault.Credentials[i].name == name)
             {
                 return i;
             }
         }
 
-        return -1; 
+        return -1;
     }
 
     public static string[] ListCreds()
     {
-        List<string> arr = new();
-
-        foreach(var item in vault.Credentials)
-        {
-            arr.Add(item.name);
-        }
-
-        return arr.ToArray();
+        if (!open)
+        { return null; }
+        return vault.Credentials.Select(cred => cred.name).ToArray();
     }
 
     /// <summary>
@@ -104,12 +107,13 @@ public static class VaultHandler
             if (vault.Credentials[i].name == name)
             {
                 vault.Credentials.RemoveAt(i);
+
+                vaultUpdated = true;
+                Save();
+
                 return true;
             }
         }
-
-        vaultUpdated = true;
-        Save();
 
         return false;
     }
@@ -133,7 +137,11 @@ public static class VaultHandler
         {
             if (vault.Credentials[i].name == name)
             {
-                return false;
+                vault.Credentials[i].link = link;
+                vault.Credentials[i].username = username;
+                vault.Credentials[i].password = passwd;
+
+                return true;
             }
         }
 
@@ -153,37 +161,53 @@ public static class VaultHandler
         return true;
     }
 
-    public static async void Open(string passwd, string path)
+    // true means successfull operation
+    public static async Task<bool> Open(string passwd, string path)
     {
         if (open) { CloseVault(); }
 
         location = path;
         password = passwd;
 
-        using (FileStream input = new FileStream(location, FileMode.Open, FileAccess.Read))
+        if (!File.Exists(location))
         {
-            using (Aes aes = Aes.Create())
-            {
-                aes.Mode = CipherMode.CFB;
-                aes.Key = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
-                aes.GenerateIV();
-
-                byte[] iv = new byte[aes.BlockSize / 8];
-                await input.ReadAsync(iv, 0, iv.Length);
-
-                var decryptor = aes.CreateDecryptor();
-
-                using (CryptoStream cs = new CryptoStream(input, decryptor, CryptoStreamMode.Read))
-                using (StreamReader reader = new StreamReader(cs))
-                {
-                    var json = await reader.ReadToEndAsync();
-
-                    vault = (Vault)JsonConvert.DeserializeObject(json);
-                }
-            }
+            return false;
         }
 
-        open = true;
+        try
+        {
+            using (FileStream input = new FileStream(location, FileMode.Open, FileAccess.Read))
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Mode = CipherMode.CFB;
+                    aes.Key = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                    byte[] iv = new byte[aes.BlockSize / 8];
+                    await input.ReadAsync(iv, 0, iv.Length);
+
+                    aes.IV = iv;
+
+                    var decryptor = aes.CreateDecryptor();
+
+                    using (CryptoStream cs = new CryptoStream(input, decryptor, CryptoStreamMode.Read))
+                    using (StreamReader reader = new StreamReader(cs))
+                    {
+                        var json = await reader.ReadToEndAsync();
+
+                        vault = JsonSerializer.Deserialize<Vault>(json);
+                    }
+                }
+            }
+
+            open = true;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return false;
+        }
     }
 
 
@@ -214,7 +238,7 @@ public static class VaultHandler
 
                 var encryptor = aes.CreateEncryptor();
 
-                var json = JsonConvert.SerializeObject(vault);
+                var json = JsonSerializer.Serialize(vault);
 
                 using (CryptoStream cs = new CryptoStream(outs, encryptor, CryptoStreamMode.Write))
                 {
@@ -227,18 +251,18 @@ public static class VaultHandler
         vaultUpdated = false;
     }
 
-    struct Vault
+    class Vault
     { //structured like that bc might add more functionality down the line
-        public List<CredentialsSet> Credentials;
+        public List<CredentialsSet> Credentials { get; set; }
     }
 
-    public struct CredentialsSet
+    public class CredentialsSet
     {
-        public string name;
+        public string name { get; set; }
 
-        public string? username;
+        public string? username { get; set; }
 
-        public string? link;
-        public string password;
+        public string? link { get; set; }
+        public string password { get; set; }
     }
 }

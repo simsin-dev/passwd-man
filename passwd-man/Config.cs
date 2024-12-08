@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Xml.Linq;
-using Newtonsoft.Json;
 
 public static class Config
 {
@@ -24,11 +24,11 @@ public static class Config
         {
             try
             {
-                config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(configLocation));
+                config = JsonSerializer.Deserialize<Configuration>(File.ReadAllText(configLocation));
             }
-            catch (InvalidCastException icex)
+            catch (Exception ex)
             {
-                Console.WriteLine(icex.ToString());
+                Console.WriteLine(ex.ToString());
                 New();
             }
         }
@@ -47,7 +47,7 @@ public static class Config
 
     static void Save()
     {
-        var str = JsonConvert.SerializeObject(config);
+        var str = JsonSerializer.Serialize(config);
         File.WriteAllText(configLocation, str);
     }
 
@@ -56,6 +56,11 @@ public static class Config
     public static string[] ListVaultNames()
     {
         return config.vaults.Select(v => v.name).ToArray();
+    }
+
+    public static string GetVaultPath(string name)
+    {
+        return config.vaults.Where(v => v.name == name).Last().path;
     }
 
     public static void AddVault(string name, string path)
@@ -86,15 +91,17 @@ public static class Config
         return false;
     }
 
-    struct Configuration
+    //designed like this for future extensibility
+
+    class Configuration
     {
-        public List<Vault> vaults;
+        public List<Vault> vaults { get; set; }
     }
 
-    struct Vault
+    class Vault
     {
-        public string name;
-        public string path;
+        public string name { get; set; }
+        public string path { get; set; }
 
         public Vault(string name, string path)
         {

@@ -26,14 +26,15 @@ public partial class App : Application
             Config.Load();
             if (Config.AreVaultsPresent())
             {
-                desktop.MainWindow = new MainWindow
+                desktop.MainWindow = new OpenVaultWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = new OpenVaultViewModel(),
                 };
             }
             else
             {
-                desktop.MainWindow = new VaultCreationWindow{
+                desktop.MainWindow = new VaultCreationWindow
+                {
                     DataContext = new VaultCreationViewModel(),
                 };
             }

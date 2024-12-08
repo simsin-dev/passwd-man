@@ -115,7 +115,8 @@ public partial class VaultCreationWindow : Window
 
         VaultHandler.CreateVault(FolderPathTextBox.Text, PasswordCheck.Text);
 
-        var mainWind = new MainWindow{
+        var mainWind = new MainWindow
+        {
             DataContext = new MainWindowViewModel()
         };
 

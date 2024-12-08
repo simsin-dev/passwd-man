@@ -21,16 +21,17 @@
         </Design.DataContext>
 
         <StackPanel>
+            <TextBox x:Name="PasswdBox" Watermark="Password" PasswordChar="*" Text="{Binding Password}"/>
             <ItemsControl x:Name="items" ItemsSource="{Binding Items}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="{Binding Name}" Margin="0,0,10,0"/>
-                            <Button Content="OPEN"
-                                    Command="{Binding #items.((vm:OpenVaultViewModel)DataContext).}"/>
+                            <Button Content="OPEN" Command="{Binding OpenVault}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Button Content="Create Vault" Click="CreateVault"/>
         </StackPanel>
 </Window>

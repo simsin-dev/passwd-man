@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.VisualTree;
 using Avalonia.Input.Platform;
 using Avalonia.Controls.ApplicationLifetimes;
+using System.Runtime.ConstrainedExecution;
+using System;
 
 namespace passwd_man;
 
@@ -24,6 +26,7 @@ public class Clipboard {
             }
         }
 
+        Console.WriteLine("!!!!!??????");
         return null!;
     }
 }

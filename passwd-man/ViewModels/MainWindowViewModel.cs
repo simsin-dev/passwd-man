@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using DynamicData;
+using passwd_man.Views;
 using ReactiveUI;
 
 namespace passwd_man.ViewModels
@@ -16,8 +20,50 @@ namespace passwd_man.ViewModels
 
         public MainWindowViewModel()
         {
+            UpdateList();
+
+            Updater();
+        }
+
+        private async Task Updater()
+        {
+            while(true)
+            {
+                await Task.Delay(500);
+                UpdateList();
+            }
+        }
+
+        public async void AddCredentials()
+        {
+            var addCredsWindow = new AddCredentialsWindow();
+
+            addCredsWindow.Show();
+
+            addCredsWindow.Closed += AddedCreds;
+        }
+
+        public async void GenCredentials()
+        {
+            var genCredsWindow = new GenerateCredentialsWindow();
+
+            genCredsWindow.Show();
+
+            genCredsWindow.Closed += AddedCreds;
+        }
+
+        private void AddedCreds(object? sender, EventArgs e)
+        {
+            UpdateList();
+        }
+
+        void UpdateList()
+        {
+            Credentials.Clear();
             string[] names = VaultHandler.ListCreds();
             Credentials.AddRange(names.Select(name => new Item { Name = name }).ToArray());
+
+            //Console.WriteLine(Credentials.Count);
         }
 
         public class Item
@@ -29,13 +75,13 @@ namespace passwd_man.ViewModels
                 await clip.SetTextAsync(VaultHandler.GetLink(Name));
             }
 
-            private async void GetPassword()
+            public async void GetPassword()
             {
                 var clip = Clipboard.Get();
                 await clip.SetTextAsync(VaultHandler.GetPassword(Name));
             }
 
-            private async void GetUsername()
+            public async void GetUsername()
             {
                 var clip = Clipboard.Get();
                 await clip.SetTextAsync(VaultHandler.GetUsername(Name));
@@ -43,9 +89,17 @@ namespace passwd_man.ViewModels
 
             public void EditItem()
             {
-                Console.WriteLine($"Editing: {Name}");
+                VaultHandler.CredentialsSetToEdit = Name;
+
+                var addCredsWindow = new AddCredentialsWindow();
+
+                addCredsWindow.Show();
             }
 
+            public void RemoveItem()
+            {
+                VaultHandler.RemoveCreds(Name);
+            }
         }
     }
 }
