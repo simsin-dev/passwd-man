@@ -19,7 +19,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <StackPanel>
+    <StackPanel Margin="5">
         <ItemsControl x:Name="items" ItemsSource="{Binding Credentials}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -44,8 +44,8 @@
                 </DataTemplate> 
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Content="Generate" Command="{Binding GenCredentials}"/>
-        <Button Content="Add" Command="{Binding AddCredentials}"/>
+        <Button Content="Generate" Command="{Binding GenCredentials}" Margin="0,5,0,5"/>
+        <Button Content="Add" Command="{Binding AddCredentials}" Margin="0,5,0,5"/>
     </StackPanel>
 </Window>
 

@@ -13,13 +13,17 @@
         Background="Black"
         Title="Create a vault">
 
-        <StackPanel>
+        <StackPanel Margin="5">
+            <TextBlock Text="Vault name:" Margin="5"/>
             <TextBox x:Name="VaultName" Watermark="Name"/>
+            <TextBlock Text="Path:" Margin="5"/>
             <TextBox x:Name="FolderPathTextBox" Watermark="Path"/>
             <Button Click="PressedHandler">Choose</Button>
+            <TextBlock Text="Password:" Margin="5"/>
             <TextBox x:Name="Password" Watermark="Password" PasswordChar="*"/>
+            <TextBlock Text="Confirm password:" Margin="5"/>
             <TextBox x:Name="PasswordCheck" Watermark="Repeat Password" PasswordChar="*"/>
             <TextBlock x:Name="IsOk"/>
-            <Button Click="CreateVault">Create!</Button>
+            <Button Click="CreateVault" Margin="5">Create!</Button>
         </StackPanel>
 </Window>
