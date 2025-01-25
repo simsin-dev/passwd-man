@@ -13,9 +13,27 @@
         MaxWidth="400"
         MaxHeight="600"
         Background="Black"
+	Foreground="White"
         Title="Open Vault">
 
-        
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="DarkGray" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!-- Button Hover Styles -->
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+    </Window.Styles>
+
+
+       
         <Design.DataContext>
             <vm:OpenVaultViewModel/>
         </Design.DataContext>
@@ -27,11 +45,11 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="{Binding Name}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <Button Content="OPEN" Command="{Binding OpenVault}"/>
+                            <Button Content="OPEN" Foreground="White" Command="{Binding OpenVault}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Content="Create Vault" Click="CreateVault"/>
+            <Button Foreground="White" Content="Create Vault" Click="CreateVault"/>
         </StackPanel>
 </Window>

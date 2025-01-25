@@ -11,19 +11,38 @@
         MaxWidth="400"
         MaxHeight="600"
         Background="Black"
+	Foreground="White"
         Title="Create a vault">
+
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="DarkGray" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!-- Button Hover Styles -->
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+    </Window.Styles>
+
+
 
         <StackPanel Margin="5">
             <TextBlock Text="Vault name:" Margin="5"/>
             <TextBox x:Name="VaultName" Watermark="Name"/>
             <TextBlock Text="Path:" Margin="5"/>
             <TextBox x:Name="FolderPathTextBox" Watermark="Path"/>
-            <Button Click="PressedHandler">Choose</Button>
+            <Button Foreground="White" Click="PressedHandler">Choose</Button>
             <TextBlock Text="Password:" Margin="5"/>
             <TextBox x:Name="Password" Watermark="Password" PasswordChar="*"/>
             <TextBlock Text="Confirm password:" Margin="5"/>
             <TextBox x:Name="PasswordCheck" Watermark="Repeat Password" PasswordChar="*"/>
             <TextBlock x:Name="IsOk"/>
-            <Button Click="CreateVault" Margin="5">Create!</Button>
+            <Button Foreground="White" Click="CreateVault" Margin="5">Create!</Button>
         </StackPanel>
 </Window>

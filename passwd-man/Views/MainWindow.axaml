@@ -13,7 +13,27 @@
         MaxWidth="400"
         MaxHeight="600"
         Background="Black"
+	Foreground="White"
         Title="passwd_man">
+
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="DarkGray" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!-- Button Hover Styles -->
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+    </Window.Styles>
+
+
+
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -25,27 +45,27 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="{Binding Name}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <Button Margin="5,0" Command="{Binding GetUsername}">
+                        <Button Margin="5,0" Foreground="White" Command="{Binding GetUsername}">
                            <Image Source="/Assets/ic--baseline-person.png" Width="18" Height="18"/> 
                         </Button>
-                        <Button  Margin="5,0" Command="{Binding GetPassword}">
+                        <Button  Margin="5,0" Foreground="White" Command="{Binding GetPassword}">
                            <Image Source="/Assets/ic--baseline-lock.png" Width="18" Height="18"/> 
                         </Button>
-                        <Button Margin="5,0" Command="{Binding GetLink}">
+                        <Button Margin="5,0" Foreground="White" Command="{Binding GetLink}">
                            <Image Source="/Assets/ic--baseline-insert-link.png" Width="18" Height="18"/> 
                         </Button>
-                        <Button Margin="5,0" Command="{Binding EditItem}">
+                        <Button Margin="5,0" Foreground="White" Command="{Binding EditItem}">
                            <Image Source="/Assets/ic--baseline-edit.png" Width="18" Height="18"/> 
                         </Button>
-                         <Button Margin="5,0" Command="{Binding RemoveItem}">
+                         <Button Margin="5,0" Foreground="White" Command="{Binding RemoveItem}">
                            <Image Source="/Assets/ic--baseline-delete-forever.png" Width="18" Height="18"/> 
                         </Button>
                     </StackPanel>
                 </DataTemplate> 
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Content="Generate" Command="{Binding GenCredentials}" Margin="0,5,0,5"/>
-        <Button Content="Add" Command="{Binding AddCredentials}" Margin="0,5,0,5"/>
+        <Button Content="Generate" Foreground="White" Command="{Binding GenCredentials}" Margin="0,5,0,5"/>
+        <Button Content="Add" Foreground="White" Command="{Binding AddCredentials}" Margin="0,5,0,5"/>
     </StackPanel>
 </Window>
 
