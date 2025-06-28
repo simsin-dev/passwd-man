@@ -39,6 +39,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+	<ScrollViewer>
     <StackPanel Margin="5">
         <ItemsControl x:Name="items" ItemsSource="{Binding Credentials}">
             <ItemsControl.ItemTemplate>
@@ -67,6 +68,7 @@
         <Button Content="Generate" Foreground="White" Command="{Binding GenCredentials}" Margin="0,5,0,5"/>
         <Button Content="Add" Foreground="White" Command="{Binding AddCredentials}" Margin="0,5,0,5"/>
     </StackPanel>
+	</ScrollViewer>
 </Window>
 
 
