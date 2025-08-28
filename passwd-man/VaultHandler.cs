@@ -12,7 +12,7 @@ namespace passwd_man;
 
 public static class VaultHandler
 {
-    public static string? CredentialsSetToEdit; //There is probably a better way to do this. I don not care
+    public static string? CredentialsSetToEdit; //There is probably a better way to do this. I do not care
 
     static Vault vault;
     static string location = "";
@@ -140,6 +140,9 @@ public static class VaultHandler
                 vault.Credentials[i].link = link;
                 vault.Credentials[i].username = username;
                 vault.Credentials[i].password = passwd;
+
+                vaultUpdated = true;
+                Save();
 
                 return true;
             }
